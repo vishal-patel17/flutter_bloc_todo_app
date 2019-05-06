@@ -11,7 +11,7 @@ class AddTaskEvent extends TaskEvent {
 }
 
 class DeleteTaskEvent extends TaskEvent {
-  final int index;
+  final String index;
   DeleteTaskEvent({@required this.index});
   @override
   String toString() => 'DeleteTaskEvent{ index: $index}';

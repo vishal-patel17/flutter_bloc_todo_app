@@ -1,10 +1,16 @@
-import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_demo/Task/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: Colors.black,
+    statusBarColor: Colors.deepPurple,
+  ));
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -62,47 +68,76 @@ class _MyHomePageState extends State<MyHomePage> {
                 bloc: _taskBloc,
                 builder: (context, TaskState state) {
                   if (state is InitialTaskState) {
-                    return taskList.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: taskList.length,
-                            itemBuilder: (context, i) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  color: Colors.transparent,
-                                  shape: OutlineInputBorder(),
-                                  elevation: 0.0,
-                                  child: ListTile(
-                                    leading: Text(
-                                      "${i + 1}.",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    title: Text(
-                                      taskList[i],
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    trailing: IconButton(
-                                        icon: Icon(
-                                          Icons.done,
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                        onPressed: () {
-                                          _taskBloc.dispatch(
-                                              DeleteTaskEvent(index: i));
-                                        }),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : Center(
-                            child: Text('All Tasks completed!'),
+                    return StreamBuilder<QuerySnapshot>(
+                      stream:
+                          Firestore.instance.collection('tasks').snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasError)
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
                           );
+                        if (!snapshot.hasData)
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.red),
+                            ),
+                          );
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          default:
+                            print(snapshot.data.documents.length);
+                            return snapshot.data.documents.length > 0
+                                ? ListView(
+                                    children: snapshot.data.documents
+                                        .map((DocumentSnapshot document) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Card(
+                                          color: Colors.transparent,
+                                          shape: OutlineInputBorder(),
+                                          elevation: 0.0,
+                                          child: ListTile(
+                                            leading: Text(
+                                              "${snapshot.data.documents.indexOf(document) + 1}",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black54,
+                                              ),
+                                            ),
+                                            title: Text(
+                                              document['name'],
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            trailing: IconButton(
+                                                icon: Icon(
+                                                  Icons.done,
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                onPressed: () {
+                                                  _taskBloc.dispatch(
+                                                      DeleteTaskEvent(
+                                                          index: document
+                                                              .documentID));
+                                                }),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  )
+                                : Center(
+                                    child: Text('All Tasks completed!'),
+                                  );
+                        }
+                      },
+                    );
                   }
                   return Center(
                     child: Text('All Tasks completed!'),
