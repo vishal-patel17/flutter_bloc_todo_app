@@ -146,7 +146,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                         }).toList(),
                                       )
                                     : Center(
-//                                        alignment: Alignment.topCenter,
                                         child: Text(
                                           'All Tasks Completed!',
                                           style: TextStyle(
@@ -171,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: _textController,
                   decoration: InputDecoration(
                     border: UnderlineInputBorder(),
