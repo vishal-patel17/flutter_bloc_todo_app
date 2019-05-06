@@ -13,7 +13,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -80,14 +79,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (!snapshot.hasData)
                           return Center(
                             child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.red),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor),
                             ),
                           );
                         switch (snapshot.connectionState) {
                           case ConnectionState.waiting:
                             return Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
+                              ),
                             );
                           default:
                             print(snapshot.data.documents.length);
