@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+//      backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text('Tasks'),
         centerTitle: true,
@@ -134,15 +134,54 @@ class _MyHomePageState extends State<MyHomePage> {
                                       );
                                     }).toList(),
                                   )
-                                : Center(
-                                    child: Text('All Tasks completed!'),
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Center(
+                                        child: Image.asset(
+                                          'assets/done.png',
+                                          fit: BoxFit.cover,
+                                          color: Color.fromRGBO(
+                                              255, 255, 255, 0.5),
+                                          colorBlendMode: BlendMode.modulate,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Center(
+                                        child: Text(
+                                          'All Tasks Completed!',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   );
                         }
                       },
                     );
                   }
-                  return Center(
-                    child: Text('All Tasks completed!'),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Image.asset(
+                          'assets/done.png',
+                          fit: BoxFit.cover,
+                          color: Color.fromRGBO(255, 255, 255, 0.5),
+                          colorBlendMode: BlendMode.modulate,
+                        ),
+                      ),
+                      SizedBox(height: 8.0),
+                      Center(
+                        child: Text(
+                          'All Tasks Completed!',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 }),
           ),
