@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
-          mini: true,
+//          mini: true,
           child: Icon(Icons.add),
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
@@ -60,140 +60,125 @@ class _MyHomePageState extends State<MyHomePage> {
               _textController.clear();
             } else {}
           }),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          Flexible(
-            child: BlocBuilder(
-                bloc: _taskBloc,
-                builder: (context, TaskState state) {
-                  if (state is InitialTaskState) {
-                    return StreamBuilder<QuerySnapshot>(
-                      stream:
-                          Firestore.instance.collection('tasks').snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError)
-                          return Center(
-                            child: Text('Error: ${snapshot.error}'),
-                          );
-                        if (!snapshot.hasData)
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor),
-                            ),
-                          );
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).primaryColor),
-                              ),
-                            );
-                          default:
-                            print(snapshot.data.documents.length);
-                            return snapshot.data.documents.length > 0
-                                ? ListView(
-                                    children: snapshot.data.documents
-                                        .map((DocumentSnapshot document) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Card(
-                                          color: Colors.transparent,
-                                          shape: OutlineInputBorder(),
-                                          elevation: 0.0,
-                                          child: ListTile(
-                                            leading: Text(
-                                              "${snapshot.data.documents.indexOf(document) + 1}",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.black54,
-                                              ),
-                                            ),
-                                            title: Text(
-                                              document['name'],
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                              ),
-                                            ),
-                                            trailing: IconButton(
-                                                icon: Icon(
-                                                  Icons.done,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
+          Center(
+            child: Image.asset(
+              'assets/done.png',
+              fit: BoxFit.cover,
+              color: Color.fromRGBO(255, 255, 255, 0.3),
+              colorBlendMode: BlendMode.modulate,
+            ),
+          ),
+          Column(
+            children: <Widget>[
+              Flexible(
+                child: BlocBuilder(
+                    bloc: _taskBloc,
+                    builder: (context, TaskState state) {
+                      if (state is InitialTaskState) {
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: Firestore.instance
+                              .collection('tasks')
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasError)
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            if (!snapshot.hasData)
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).primaryColor),
+                                ),
+                              );
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).primaryColor),
+                                  ),
+                                );
+                              default:
+                                print(snapshot.data.documents.length);
+                                return snapshot.data.documents.length > 0
+                                    ? ListView(
+                                        children: snapshot.data.documents
+                                            .map((DocumentSnapshot document) {
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Card(
+                                              color: Colors.transparent,
+                                              shape: OutlineInputBorder(),
+                                              elevation: 0.0,
+                                              child: ListTile(
+                                                leading: Text(
+                                                  "${snapshot.data.documents.indexOf(document) + 1}",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black54,
+                                                  ),
                                                 ),
-                                                onPressed: () {
-                                                  _taskBloc.dispatch(
-                                                      DeleteTaskEvent(
-                                                          index: document
-                                                              .documentID));
-                                                }),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  )
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Center(
-                                        child: Image.asset(
-                                          'assets/done.png',
-                                          fit: BoxFit.cover,
-                                          color: Color.fromRGBO(
-                                              255, 255, 255, 0.5),
-                                          colorBlendMode: BlendMode.modulate,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8.0),
-                                      Center(
+                                                title: Text(
+                                                  document['name'],
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                  ),
+                                                ),
+                                                trailing: IconButton(
+                                                    icon: Icon(
+                                                      Icons.done,
+                                                      color: Theme.of(context)
+                                                          .primaryColor,
+                                                    ),
+                                                    onPressed: () {
+                                                      _taskBloc.dispatch(
+                                                          DeleteTaskEvent(
+                                                              index: document
+                                                                  .documentID));
+                                                    }),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      )
+                                    : Center(
+//                                        alignment: Alignment.topCenter,
                                         child: Text(
                                           'All Tasks Completed!',
                                           style: TextStyle(
                                             fontSize: 18,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  );
-                        }
-                      },
-                    );
-                  }
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Image.asset(
-                          'assets/done.png',
-                          fit: BoxFit.cover,
-                          color: Color.fromRGBO(255, 255, 255, 0.5),
-                          colorBlendMode: BlendMode.modulate,
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      Center(
+                                      );
+                            }
+                          },
+                        );
+                      }
+                      return Center(
                         child: Text(
                           'All Tasks Completed!',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                border: UnderlineInputBorder(),
-                hintText: 'Enter task name',
+                      );
+                    }),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextField(
+                  controller: _textController,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(),
+                    hintText: 'Enter task name',
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
