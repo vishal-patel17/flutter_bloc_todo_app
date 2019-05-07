@@ -56,12 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.search,
-            ),
-            onPressed: () {},
-          ),
+//          IconButton(
+//            icon: Icon(
+//              Icons.search,
+//            ),
+//            onPressed: () {},
+//          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -90,8 +90,27 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
 //                padding: EdgeInsets.all(8.0),
                 width: MediaQuery.of(context).size.width - 40.0,
-                height: 60.0,
-                color: Colors.red,
+                height: MediaQuery.of(context).size.height / 11.0,
+//                color: Colors.red,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FloatingActionButton.extended(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      label: Text('Find a task'),
+                      heroTag: 'find',
+                      icon: Icon(Icons.search),
+                      onPressed: () {},
+                    ),
+                    FloatingActionButton.extended(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      label: Text('Random task'),
+                      heroTag: 'random',
+                      icon: Icon(Icons.device_unknown),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
               Divider(),
               Flexible(
