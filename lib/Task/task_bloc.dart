@@ -11,7 +11,6 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   Stream<TaskState> mapEventToState(
     TaskEvent event,
   ) async* {
-    // TODO: Add Logic
     if (event is AddTaskEvent) {
       yield* _mapAddTasktoState(event.name);
     } else if (event is DeleteTaskEvent) {

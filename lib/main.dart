@@ -86,6 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Column(
             children: <Widget>[
+              SizedBox(height: 8.0),
+              Container(
+//                padding: EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width - 40.0,
+                height: 60.0,
+                color: Colors.red,
+              ),
+              Divider(),
               Flexible(
                 child: BlocBuilder(
                     bloc: _taskBloc,
