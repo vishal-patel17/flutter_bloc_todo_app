@@ -27,12 +27,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       });
     });
 //    taskList.add(name);
-    yield InitialTaskState();
+//    yield InitialTaskState();
   }
 
   Stream<TaskState> _mapDeleteTasktoState(String index) async* {
     await Firestore.instance.collection('tasks').document(index).delete();
 //    taskList.removeAt(index);
-    yield InitialTaskState();
+//    yield InitialTaskState();
   }
 }

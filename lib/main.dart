@@ -37,7 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _textController = new TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void dispose() {
+    _textController.dispose();
     _taskBloc.dispose();
     super.dispose();
   }
@@ -45,13 +51,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text('Tasks'),
         centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.search,
+            ),
+            onPressed: () {},
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
-//          mini: true,
+          elevation: 4.0,
           child: Icon(Icons.add),
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
